@@ -5,6 +5,16 @@ public class DeHex {
 		String line;
 		int red, nir, sum;
 		int chk,hwt;
+		double time;
+		double timeOffset=0;
+
+
+		for (int i = 0; i < arg.length; i++) {
+			if ("-t".equals(arg[i])) {
+				timeOffset = Double.parseDouble(arg[i+1]);	
+				i++;
+			}
+		}
 
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		while ( (line = r.readLine()) != null) {
@@ -19,6 +29,7 @@ public class DeHex {
 			}
 
 			try {
+			time = Double.parseDouble(p[0]);
 			red = Integer.parseInt(p[3],16);
 			nir = Integer.parseInt(p[4],16);
 			hwt = Integer.parseInt(p[5],16);
@@ -36,7 +47,8 @@ public class DeHex {
 			}
 
 
-			System.out.print(p[0]+" ");
+			//System.out.print(p[0]+" ");
+			System.out.print( String.format("%.6f",(time-timeOffset)) + " " );
 			System.out.print(hwt + " ");
 			System.out.print(p[2]+" ");
 			System.out.print(red + " ");

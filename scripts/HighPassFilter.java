@@ -9,6 +9,8 @@ public class HighPassFilter {
 		long red,nir;
 		long lpfRed=0, lpfNir=0;
 
+		final int filterTC = 256;
+
 		LineNumberReader r = new LineNumberReader(new InputStreamReader(System.in));
 		while ( (line = r.readLine()) != null) {
 			String[] p = line.split(" ");
@@ -16,10 +18,15 @@ public class HighPassFilter {
 			red = Long.parseLong(p[3]);
 			nir = Long.parseLong(p[4]);
 
-			lpfRed = (red + 15*lpfRed)/16;
-			lpfNir = (nir + 15*lpfNir)/16;
+			lpfRed = (red + (filterTC-1)*lpfRed)/filterTC;
+			lpfNir = (nir + (filterTC-1)*lpfNir)/filterTC;
 
-			System.out.println (p[0] + " " + p[1] + " " + p[2] + " " + (red-lpfRed) + " " + (nir-lpfNir));
+			System.out.println (
+			p[0] + " " + p[1] + " " + p[2] 
+			+ " " + red + " " + nir
+			+ " " + (red-lpfRed) + " " + (nir-lpfNir)
+			+ " " + lpfRed + " " + lpfNir
+			);
 		}
 	}
 }
