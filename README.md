@@ -7,6 +7,8 @@ For my experiments I am aquiring data from a MAX30102 [1] sensor mounted on GY-M
 
 ![PPG trace from MAX30102 sensor](https://raw.githubusercontent.com/jdesbonnet/LPC824_MAX30102/master/doc/run1.png)
 
+![PPG spectrum](./doc/ppg_spectrum.png)
+
 
 # References
 
