@@ -12,13 +12,20 @@
 void main (int argc, char **argv) {
 
 	int i,j=0;
+
+	// Number of samples in FFT slice
 	int n = atoi(argv[1]);
+
+	// Samples per second
+	int sps = atoi(argv[2]);
+
 	double t;
 
 	// Got N real values. Result of FFT is
 	// N/2+1 complex values due to hermitian redundancy.
 	double in_red[n],in_nir[n];
 	double mag_red,mag_nir;
+	double f;
 	fftw_complex out_red[n/2+1], out_nir[n/2+1];
 	fftw_plan plan_red, plan_nir;
 
@@ -28,14 +35,11 @@ void main (int argc, char **argv) {
 
 	while (!feof(stdin)) {
 
-
-
 		for (i = 0; i < n; i++) {
 			if (feof(stdin)) {
-				return;
+				break;
 			}
 			fscanf (stdin,"%lf %lf %lf", &t, &in_red[i], &in_nir[i]);
-			//fprintf (stderr,"%f %f\n", t, in_red[i], in_nir[i]);
 		}
 
 		fftw_execute(plan_red);
@@ -43,7 +47,9 @@ void main (int argc, char **argv) {
 		for (i = 0; i < (n/2)+1; i++) {
 			mag_red = sqrt(out_red[i][0]*out_red[i][0] + out_red[i][1]*out_red[i][1]);
 			mag_nir = sqrt(out_nir[i][0]*out_nir[i][0] + out_nir[i][1]*out_nir[i][1]);
-			fprintf (stdout,"%d %d %f %f\n",i,j,mag_red,mag_nir);
+			f = (double)(i*sps)/(double)n;
+			t = (double)(j*n)/(double)sps;
+			fprintf (stdout,"%f %f %f %f\n",f,t,mag_red,mag_nir);
 		}
 		j++;
 	}
