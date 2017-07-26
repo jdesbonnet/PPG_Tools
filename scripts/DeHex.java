@@ -16,13 +16,20 @@ public class DeHex {
 			}
 		}
 
-		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+		LineNumberReader r = new LineNumberReader(new InputStreamReader(System.in));
 		while ( (line = r.readLine()) != null) {
 			String[] p = line.split(" ");
-			if (p.length != 7) {
-				System.err.println("bad length");
+
+			if (p[1].startsWith("#")) {
+				//System.out.println(line);
 				continue;
 			}
+
+			if (p.length != 7) {
+				System.err.println("line " + r.getLineNumber() + ": unexpected number of columns " + p.length);
+				continue;
+			}
+
 			if (!"$PPGV0".equals(p[1]))  {
 				System.err.println("bad format");
 				continue;
