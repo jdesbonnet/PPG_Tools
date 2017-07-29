@@ -51,7 +51,7 @@ public class CleanLevel2 {
 			nirdc = Integer.parseInt(p[10]);
 
 			if ( Math.abs(redac2) > threshold) {
-				System.err.println ("line " + r.getLineNumber() + ": dropping record");
+				System.err.println ("line " + r.getLineNumber() + ": ac signal too high (" + redac2 +"): dropping record");
 				dropCount++;
 				continue;
 			}
