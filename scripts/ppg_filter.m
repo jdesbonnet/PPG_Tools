@@ -36,11 +36,21 @@ N = dB*Fs/(22*delta_f)
 #N = 40
 
 red_dc = medfilt1(red, Fs*2);
-#redac = filter (b, a, red);
-red_ac = red - red_dc;
+red_ac = (red - red_dc) ./ red_dc;
+
+nir_dc = medfilt1(nir, Fs*2);
+nir_ac = (nir - nir_dc) ./ nir_dc;
+
 
 ppgf = fir1( 40 , [ f1/Fn , f2/Fn], "pass");
 #red_filtered = filter(ppgf,1,red_ac);
 red_filtered = filtfilt(ppgf,1,red_ac);
+nir_filtered = filtfilt(ppgf,1,nir_ac);
+d_red_filtered = [0 ; diff(red_filtered) ];
+d_nir_filtered = [0 ; diff(nir_filtered) ];
 
-dlmwrite (dataout, horzcat(time, red_ac ,red_filtered), " " )
+
+#[qrs_amp_raw, qrs_i_raw,delay] = pan_tompkin(red_ac * -1,200,0);
+#dlmwrite("r.r",time(qrs_i_raw))
+
+dlmwrite (dataout, horzcat(time, red_filtered, nir_filtered, d_red_filtered, d_nir_filtered),  " " )

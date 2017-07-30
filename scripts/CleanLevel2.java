@@ -10,11 +10,14 @@ public class CleanLevel2 {
 	public static void main (String[] arg) throws Exception {
 		String line;
 		int sensor;
-		int red,nir,redac1,nirac1,redac2,nirac2,reddc,nirdc;
+		int red,nir;
+		int red_lpf=0;
 		double time;
 		int hwclock;
 		int dropCount=0;
 		int totalRecords=0;
+
+		int filterTC = 128;
 
 		int threshold = 5000;
 
@@ -33,7 +36,7 @@ public class CleanLevel2 {
 			String[] p = line.split(" ");
 
 			// Remaining lines are formatted as <host-time-tag> $PPGV0 device red nir hwclock checksum
-			if (p.length != 13) {
+			if (p.length != 5) {
 				System.err.println ("line " + r.getLineNumber() + ": wrong number of columns " + p.length + " line: " + line);
 				continue;
 			}
@@ -43,15 +46,11 @@ public class CleanLevel2 {
 			sensor = Integer.parseInt(p[2]);
 			red = Integer.parseInt(p[3]);
 			nir = Integer.parseInt(p[4]);
-			redac1 = Integer.parseInt(p[5]);
-			nirac1 = Integer.parseInt(p[6]);
-			redac2 = Integer.parseInt(p[7]);
-			redac2 = Integer.parseInt(p[8]);
-			reddc = Integer.parseInt(p[9]);
-			nirdc = Integer.parseInt(p[10]);
 
-			if ( Math.abs(redac2) > threshold) {
-				System.err.println ("line " + r.getLineNumber() + ": ac signal too high (" + redac2 +"): dropping record");
+			red_lpf = (red + (filterTC-1)*red_lpf)/filterTC;
+
+			if ( Math.abs(red-red_lpf) > threshold) {
+				System.err.println ("line " + r.getLineNumber() + ": ac signal too high (" + (red-red_lpf) +"): dropping record");
 				dropCount++;
 				continue;
 			}
