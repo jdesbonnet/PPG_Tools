@@ -9,6 +9,8 @@ For my experiments I am aquiring data from a MAX30102 [1] sensor mounted on GY-M
 
 ![PPG spectrum](./doc/ppg_spectrum.png)
 
+![Overnight recording of PPG](./doc/sleep.png)
+
 
 # References
 
