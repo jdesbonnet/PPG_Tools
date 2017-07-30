@@ -1,7 +1,7 @@
 import java.io.*;
 
 /**
- * Calculate phase between two sensors.
+ * Calculate signal phase between two PPG sensors.
  */
 public class Phase {
 	public static void main (String[] arg) throws Exception {
@@ -15,16 +15,21 @@ public class Phase {
 		while ( (line_a = ra.readLine()) != null) {
 
 
-			time_a = Double.parseDouble(line_a);
+			String[] pa = line_a.split(" ");
+
+			time_a = Double.parseDouble(pa[0]);
 
 			while (time_b < time_a) {
 				line_b = rb.readLine();
-				time_b = Double.parseDouble(line_b);
+				String[] pb = line_b.split(" ");
+				time_b = Double.parseDouble(pb[0]);
 			}
 
 			phase = time_b - time_a;
 
-			System.out.println (time_a + " " + phase );
+			if (phase < 0.4) {
+				System.out.println (time_a + " " + phase );
+			}
 
 		}
 	}
