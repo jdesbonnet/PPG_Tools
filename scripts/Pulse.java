@@ -2,15 +2,42 @@ import java.io.*;
 
 /**
  * Find start of pulses.
+ *
+ * Elements of PPG waveform:
+ *
+ *           P 
+ *           /\
+ *          /  \__T
+ *         /      \
+ *        /        \__D
+ *       /         C  \
+ *      /              \
+ *     /                \
+ *   _/                  \_
+ *    S                    S
+ *
+ * S: start point
+ * P: percussion wave
+ * T: tidal wave (reflection from small artery).
+ * C: incisura wave (end-point of systolic phase when aortic valve is closed).
+ * D: Dicrotic wave
+ *
+ * Pulse width (period) is currently defined as S-to-S. P-to-P might be
+ * more accurate however (?).
  */
 public class Pulse {
 	public static void main (String[] arg) throws Exception {
 		String line;
-		double time;
+		double time, last_time=0;
 		double last_dred_cross_time=0;
 		double systole_start_time=0;
 		double systole_peak_time;
-		double red, nir, dred, dnir, last_dred=0, last_dnir=0;
+		double red, nir;
+		//double last_red=0, last_nir=0;
+
+		// First time derivative
+		double dred, dnir, last_dred=0, last_dnir=0;
+
 		double crossing_red=0, crossing_nir=0;
 		double systole_peak_red=0, systole_peak_nir=0;
 
@@ -54,20 +81,29 @@ public class Pulse {
 			// Previous block of code recoreded the start of this edge.
 			if (state==0 && (dred < threshold)) {
 				// Systole started
-				// Output last cycle
+				// Output last cycle (start of cycle is currently defined as start of systole (S).
 				System.out.println (systole_start_time + " "  + (crossing_red - systole_peak_red) + " " + (last_dred_cross_time - systole_start_time));
 				systole_start_time = last_dred_cross_time;
 				state = 1;
 			}
 
-			// Start of systole detected, looking for peak
+			// Start of systole detected, looking for peak (when dred transitions from - to +)
 			if (state == 1) {
 				if (dred > 0) {
 					// This is the systole peak
 					// TODO extrapolate 
-					systole_peak_time = time;
+
+					double dy = dred-last_dred;
+					double dx = time-last_time;
+					double tc = -last_dred * dx / dy;
+
+					systole_peak_time = time + tc;
 					systole_peak_red = red;
 					systole_peak_nir = nir;
+
+					// Output last cycle
+					//System.out.println (last_systol_peak_time + " "
+
 					state = 2;
 				}
 			}
@@ -78,7 +114,9 @@ public class Pulse {
 			}
 
 			last_dred = dred;
-
+			last_time = time;
+			//last_red = red;
+			//last_nir = nir;
 		}
 	}
 }
