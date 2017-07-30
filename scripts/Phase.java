@@ -15,12 +15,19 @@ public class Phase {
 		while ( (line_a = ra.readLine()) != null) {
 
 
+			if (line_a.startsWith("#")) {
+				continue;
+			}
+
 			String[] pa = line_a.split(" ");
 
 			time_a = Double.parseDouble(pa[0]);
 
 			while (time_b < time_a) {
 				line_b = rb.readLine();
+				if (line_b.startsWith("#")) {
+					continue;
+				}
 				String[] pb = line_b.split(" ");
 				time_b = Double.parseDouble(pb[0]);
 			}

@@ -54,6 +54,9 @@ public class Pulse {
 
 		System.err.println ("threshold=" + threshold);
 
+		// Header
+		System.out.println ("# pulse-start-time red-amplitude nir-amplitude");
+
 		LineNumberReader r = new LineNumberReader(new InputStreamReader(System.in));
 		while ( (line = r.readLine()) != null) {
 
@@ -82,7 +85,10 @@ public class Pulse {
 			if (state==0 && (dred < threshold)) {
 				// Systole started
 				// Output last cycle (start of cycle is currently defined as start of systole (S).
-				System.out.println (systole_start_time + " "  + (crossing_red - systole_peak_red) + " " + (last_dred_cross_time - systole_start_time));
+				System.out.println (systole_start_time 
+					+ " " + (crossing_red - systole_peak_red) 
+					+ " " + (crossing_nir - systole_peak_nir)
+					+ " " + (last_dred_cross_time - systole_start_time));
 				systole_start_time = last_dred_cross_time;
 				state = 1;
 			}
