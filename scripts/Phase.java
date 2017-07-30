@@ -25,6 +25,9 @@ public class Phase {
 
 			while (time_b < time_a) {
 				line_b = rb.readLine();
+				if (line_b==null) {
+					return;
+				}
 				if (line_b.startsWith("#")) {
 					continue;
 				}

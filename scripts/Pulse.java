@@ -85,10 +85,16 @@ public class Pulse {
 			if (state==0 && (dred < threshold)) {
 				// Systole started
 				// Output last cycle (start of cycle is currently defined as start of systole (S).
-				System.out.println (systole_start_time 
+
+				double pulse_period = last_dred_cross_time - systole_start_time;
+
+				if (pulse_period > 0.5 && pulse_period < 1.2) {
+					System.out.println (systole_start_time 
 					+ " " + (crossing_red - systole_peak_red) 
 					+ " " + (crossing_nir - systole_peak_nir)
-					+ " " + (last_dred_cross_time - systole_start_time));
+					+ " " + pulse_period);
+				}
+	
 				systole_start_time = last_dred_cross_time;
 				state = 1;
 			}
